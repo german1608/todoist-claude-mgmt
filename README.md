@@ -71,6 +71,7 @@ All configuration is done via environment variables (or a `.env` file).
 | `ANTHROPIC_API_KEY`   | ✅ yes   | —                    | Anthropic API key                             |
 | `CLAUDE_MODEL`        | no       | `claude-opus-4-5`    | Anthropic model name                          |
 | `POLL_INTERVAL`       | no       | `30`                 | Seconds between polls (continuous mode only)  |
+| `MAX_WORKERS`         | no       | `4`                  | Max tasks processed in parallel               |
 | `CLAUDE_LABEL`        | no       | `claude`             | Todoist label that triggers processing        |
 | `LABEL_PENDING`       | no       | `pending`            | Label applied to tasks awaiting first pickup  |
 | `LABEL_BLOCKED`       | no       | `blocked`            | Label applied when Claude needs more info     |

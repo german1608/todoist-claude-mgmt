@@ -1,6 +1,7 @@
 """Core business logic: decide when to process a task and orchestrate the flow."""
 
 import logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from todoist_api_python.models import Comment, Task
 
@@ -10,6 +11,7 @@ from config import (
     LABEL_BLOCKED,
     LABEL_PENDING,
     LABEL_READY_FOR_REVIEW,
+    MAX_WORKERS,
     NEEDS_MORE_INFO_MARKER,
     TASK_COMPLETE_MARKER,
 )
@@ -30,15 +32,19 @@ class TaskProcessor:
     # ------------------------------------------------------------------
 
     def run_once(self) -> None:
-        """Fetch all claude-labeled tasks and process each one."""
+        """Fetch all claude-labeled tasks and process them in parallel."""
         tasks = self._todoist.get_claude_tasks()
         logger.info("Found %d task(s) with claude label", len(tasks))
 
-        for task in tasks:
-            try:
-                self._process_task(task)
-            except Exception:
-                logger.exception("Error processing task %s (%s)", task.id, task.content)
+        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+            futures = {executor.submit(self._process_task, task): task for task in tasks}
+            for future in as_completed(futures):
+                task = futures[future]
+                if future.exception():
+                    logger.exception(
+                        "Error processing task %s (%s)", task.id, task.content,
+                        exc_info=future.exception(),
+                    )
 
     # ------------------------------------------------------------------
     # Internal helpers

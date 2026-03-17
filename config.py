@@ -13,6 +13,7 @@ ANTHROPIC_API_KEY: str = os.environ["ANTHROPIC_API_KEY"]
 # Optional with defaults
 CLAUDE_MODEL: str = os.getenv("CLAUDE_MODEL", "claude-opus-4-5")
 POLL_INTERVAL: int = int(os.getenv("POLL_INTERVAL", "30"))
+MAX_WORKERS: int = int(os.getenv("MAX_WORKERS", "4"))
 CLAUDE_LABEL: str = os.getenv("CLAUDE_LABEL", "claude")
 
 # Internal constants
