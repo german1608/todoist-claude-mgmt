@@ -18,3 +18,14 @@ CLAUDE_LABEL: str = os.getenv("CLAUDE_LABEL", "claude")
 # Internal constants
 CLAUDE_COMMENT_PREFIX: str = "🤖 **Claude**: "
 TASK_COMPLETE_MARKER: str = "[TASK_COMPLETE]"
+NEEDS_MORE_INFO_MARKER: str = "[NEEDS_MORE_INFO]"
+
+# Status labels applied to tasks to reflect their current state
+LABEL_PENDING: str = os.getenv("LABEL_PENDING", "pending")
+LABEL_BLOCKED: str = os.getenv("LABEL_BLOCKED", "blocked")
+LABEL_READY_FOR_REVIEW: str = os.getenv("LABEL_READY_FOR_REVIEW", "ready-for-review")
+
+# All status labels managed by this tool (used when swapping state)
+STATUS_LABELS: frozenset[str] = frozenset(
+    {LABEL_PENDING, LABEL_BLOCKED, LABEL_READY_FOR_REVIEW}
+)

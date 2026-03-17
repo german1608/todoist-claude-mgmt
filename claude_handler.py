@@ -4,7 +4,7 @@ import logging
 
 import anthropic
 
-from config import ANTHROPIC_API_KEY, CLAUDE_MODEL, TASK_COMPLETE_MARKER
+from config import ANTHROPIC_API_KEY, CLAUDE_MODEL, NEEDS_MORE_INFO_MARKER, TASK_COMPLETE_MARKER
 
 logger = logging.getLogger(__name__)
 
@@ -12,12 +12,17 @@ _SYSTEM_PROMPT = f"""You are a helpful task assistant integrated with Todoist. \
 Your job is to help the user accomplish their tasks by providing clear, actionable guidance, \
 writing code, drafting text, researching topics, or whatever the task requires.
 
-When you believe a task is fully complete — meaning you have provided everything needed \
-and no further action is required from you — append the exact marker \
-"{TASK_COMPLETE_MARKER}" on its own line at the very end of your response.
+Use one of the following markers — on its own line at the very end of your response — \
+to indicate the outcome:
 
-If the task requires follow-up from the user, do NOT include the marker; \
-instead ask your clarifying question or describe the next step that the user must take.
+• "{TASK_COMPLETE_MARKER}" — append this when the task is fully complete and no further \
+action is required from you.
+
+• "{NEEDS_MORE_INFO_MARKER}" — append this when you cannot proceed without additional \
+information or clarification from the user.  Clearly state your question(s) before the marker.
+
+If neither condition applies (you have done useful work but the user may want to review \
+or continue the conversation), do not append any marker.
 
 Be concise and practical."""
 

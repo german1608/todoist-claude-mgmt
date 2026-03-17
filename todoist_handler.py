@@ -1,12 +1,11 @@
 """Todoist API wrapper."""
 
 import logging
-from typing import Iterator
 
 from todoist_api_python.api import TodoistAPI
 from todoist_api_python.models import Comment, Task
 
-from config import CLAUDE_LABEL, TODOIST_API_TOKEN
+from config import CLAUDE_LABEL, STATUS_LABELS, TODOIST_API_TOKEN
 
 logger = logging.getLogger(__name__)
 
@@ -51,3 +50,30 @@ class TodoistHandler:
         comment = self._api.add_comment(content, task_id=task_id)
         logger.debug("Added comment to task %s", task_id)
         return comment
+
+    # ------------------------------------------------------------------
+    # Labels
+    # ------------------------------------------------------------------
+
+    def set_task_status_label(self, task: Task, new_status: str | None) -> None:
+        """Replace any existing status label on *task* with *new_status*.
+
+        All labels in ``STATUS_LABELS`` are considered status labels managed
+        by this tool.  Any other labels on the task (e.g. ``claude``) are
+        preserved unchanged.
+
+        Args:
+            task: The task whose labels should be updated.
+            new_status: The status label to set, or ``None`` to clear all
+                status labels without adding a new one.
+        """
+        current = list(task.labels or [])
+        updated = [lbl for lbl in current if lbl not in STATUS_LABELS]
+        if new_status is not None:
+            updated.append(new_status)
+        if sorted(updated) == sorted(current):
+            return  # nothing to do
+        self._api.update_task(task.id, labels=updated)
+        logger.debug(
+            "Updated labels on task %s: %s → %s", task.id, current, updated
+        )
