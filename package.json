@@ -1,0 +1,32 @@
+{
+  "name": "todoist-claude-dispatcher",
+  "version": "0.1.0",
+  "description": "Dispatch Todoist tasks to autonomous Claude Code sessions",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "todoist",
+    "claude",
+    "dispatcher",
+    "automation"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@types/uuid": "^10.0.0",
+    "dotenv": "^17.3.1",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.1"
+  },
+  "dependencies": {
+    "uuid": "^13.0.0"
+  }
+}
